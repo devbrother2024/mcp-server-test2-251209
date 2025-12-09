@@ -3,4 +3,4 @@ build:
   dockerfile: "Dockerfile"
   dockerBuildPath: "."
 startCommand:
-  type: "stdio"
+  type: "http"
