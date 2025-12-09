@@ -1,4 +1,5 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { z } from 'zod'
 
 // Create server function for Smithery
@@ -315,4 +316,19 @@ export default function createServer({ config }: { config?: any } = {}) {
 
     // Return server instance for Smithery
     return server
+}
+
+// Direct execution support for Docker/local runs
+// Only run when executed directly via CLI (not when imported by Smithery)
+const isDirectExecution =
+    typeof require !== 'undefined' && require.main === module
+
+if (isDirectExecution) {
+    const server = createServer()
+    server
+        .connect(new StdioServerTransport())
+        .catch(console.error)
+        .then(() => {
+            console.error('MCP server started')
+        })
 }
